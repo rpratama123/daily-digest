@@ -1,0 +1,10 @@
+{
+  "entity_id": "sensor.internet_conectivity_uptime",
+  "state": "100.0",
+  "attributes": {
+    "state_class": "measurement",
+    "unit_of_measurement": "%"
+  },
+  "last_changed": "2026-09-06T09:25:59.704971+00:00",
+  "last_updated": "2026-09-06T09:25:59.704971+00:00"
+}

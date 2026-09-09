@@ -1,0 +1,64 @@
+services:
+  daily-digest:
+    build:
+      context: .
+    image: daily-digest:local
+    container_name: daily-digest
+    user: "99:100"
+    restart: unless-stopped
+    read_only: true
+    init: true
+    environment:
+      TZ: Asia/Jakarta
+      DAILY_DIGEST_CONFIG: /config/config.yaml
+    volumes:
+      - type: bind
+        source: /mnt/cache/appdata/daily-digest/config.yaml
+        target: /config/config.yaml
+        read_only: true
+        bind:
+          create_host_path: false
+      - type: bind
+        source: /mnt/cache/appdata/daily-digest/state
+        target: /data/state
+        bind:
+          create_host_path: false
+      - type: bind
+        source: /mnt/cache/appdata/daily-digest/secrets
+        target: /run/secrets/daily-digest
+        read_only: true
+        bind:
+          create_host_path: false
+      - type: bind
+        source: /mnt/user/mediaserver/downloads
+        target: /data/rclone-logs
+        read_only: true
+        bind:
+          create_host_path: false
+      - type: bind
+        source: /mnt/user/webdav/daily-digest/vellum
+        target: /data/vellum-exports
+        read_only: true
+        bind:
+          create_host_path: false
+      - type: tmpfs
+        target: /tmp
+        tmpfs:
+          size: 16777216
+          mode: 1777
+    networks:
+      - proxynet
+    security_opt:
+      - no-new-privileges:true
+    cap_drop:
+      - ALL
+    healthcheck:
+      test: ["CMD", "python", "-m", "app.main", "healthcheck"]
+      interval: 1m
+      timeout: 10s
+      retries: 3
+      start_period: 30s
+
+networks:
+  proxynet:
+    external: true

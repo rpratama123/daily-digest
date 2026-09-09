@@ -1,0 +1,63 @@
+timezone: Asia/Jakarta
+state_directory: /data/state
+database_name: daily-digest.sqlite3
+snapshot_tolerance_seconds: 120
+
+http:
+  connect_timeout_seconds: 5
+  read_timeout_seconds: 10
+
+home_assistant:
+  enabled: true
+  base_url: http://10.20.30.55:8123
+  token_file: /run/secrets/daily-digest/home_assistant_token
+  daily_energy_entity: sensor.daily_home_consumed_energy
+  cumulative_energy_entity: sensor.home_consumed_energy
+  internet_entity: sensor.internet_conectivity_uptime
+
+backups:
+  enabled: true
+  directory: /data/rclone-logs
+  logs:
+    - rclone-appdata-backup.log
+    - rclone-cikopopup-backup.log
+    - rclone-photos-backup.log
+    - rclone-cikonet-backup.log
+    - rclone-paperlessngx-backup.log
+    - rclone-stash-backup.log
+
+expenses:
+  enabled: false
+  base_url: http://expenses-dashboard:8000
+  host_header: expenses.cikohome.stream
+  username_file: null
+  password_file: null
+
+openrouter:
+  enabled: false
+  base_url: https://openrouter.ai
+  api_key_file: /run/secrets/daily-digest/openrouter_management_key
+
+deepseek:
+  enabled: false
+  base_url: https://api.deepseek.com
+  api_key_file: /run/secrets/daily-digest/deepseek_api_key
+
+vellum:
+  enabled: false
+  export_directory: /data/vellum-exports
+  max_file_bytes: 131072
+  max_age_hours: 36
+
+telegram:
+  enabled: false
+  bot_token_file: /run/secrets/daily-digest/telegram_bot_token
+  chat_id_file: /run/secrets/daily-digest/telegram_chat_id
+
+escpos:
+  enabled: false
+
+schedule:
+  snapshot_hour: 0
+  digest_hour: 7
+  misfire_grace_seconds: 3600

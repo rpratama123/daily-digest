@@ -1,0 +1,12 @@
+{
+  "date": "2026-09-08",
+  "timezone": "Asia/Jakarta",
+  "currency": "IDR",
+  "total": 805630,
+  "transaction_count": 9,
+  "top_category": {
+    "name": "Transport",
+    "total": 291230
+  },
+  "generated_at": "2026-09-09T08:40:25.397119+07:00"
+}

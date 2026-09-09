@@ -1,0 +1,12 @@
+{
+  "entity_id": "sensor.home_consumed_energy",
+  "state": "5466.15",
+  "attributes": {
+    "state_class": "total",
+    "source": "sensor.home_power_meter_power",
+    "unit_of_measurement": "kWh",
+    "device_class": "energy"
+  },
+  "last_changed": "2026-09-09T02:24:38.719387+00:00",
+  "last_updated": "2026-09-09T02:24:38.719387+00:00"
+}

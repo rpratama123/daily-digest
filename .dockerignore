@@ -1,0 +1,13 @@
+.git
+.github
+.opencode
+.venv
+.env
+config.yaml
+*.sqlite3*
+__pycache__
+.pytest_cache
+.ruff_cache
+samples
+tests
+docs
