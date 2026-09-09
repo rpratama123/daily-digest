@@ -21,6 +21,7 @@ def test_compose_has_required_isolation() -> None:
     assert "/data/rclone-logs" in read_only_targets
     assert "/run/secrets/daily-digest" in read_only_targets
     assert "/data/vellum-exports" in read_only_targets
+    assert "/data/codex-exports" in read_only_targets
 
 
 def test_docker_build_context_excludes_sensitive_inputs() -> None:

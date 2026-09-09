@@ -89,6 +89,13 @@ class VellumSettings(StrictModel):
     max_age_hours: int = Field(default=36, gt=0, le=168)
 
 
+class CodexSettings(StrictModel):
+    enabled: bool = False
+    export_file: Path = Path("/data/codex-exports/latest.json")
+    max_file_bytes: int = Field(default=32_768, gt=0, le=1_048_576)
+    max_age_minutes: int = Field(default=30, gt=0, le=1440)
+
+
 class TelegramSettings(StrictModel):
     enabled: bool = False
     bot_token_file: Path = Path("/run/secrets/daily-digest/telegram_bot_token")
@@ -123,6 +130,7 @@ class Settings(BaseSettings):
     openrouter: OpenRouterSettings = Field(default_factory=OpenRouterSettings)
     deepseek: DeepSeekSettings = Field(default_factory=DeepSeekSettings)
     vellum: VellumSettings = Field(default_factory=VellumSettings)
+    codex: CodexSettings = Field(default_factory=CodexSettings)
     telegram: TelegramSettings = Field(default_factory=TelegramSettings)
     escpos: EscPosSettings = Field(default_factory=EscPosSettings)
     schedule: ScheduleSettings = Field(default_factory=ScheduleSettings)

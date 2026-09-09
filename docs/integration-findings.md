@@ -146,17 +146,20 @@ begin on 2026-09-10, making 2026-09-10 usage available after the 2026-09-11
 snapshot. `latest.json` is never used for historical differences. See
 `docs/vellum-export.md` for the complete contract.
 
-## ChatGPT / OpenCode usage
+## Codex quota
 
-The operator currently views usage through the web while using OpenCode, but the
-underlying quota source has not been identified. It may not be equivalent to
-ChatGPT web-interface usage or Codex app usage.
+A read-only probe against authenticated `codex-cli 0.153.4` confirmed that the
+official app-server method `account/rateLimits/read` returns a `codex` bucket.
+Its secondary window is 10,080 minutes (one week) and includes `usedPercent` and
+Unix-seconds `resetsAt`. The digest reports `100 - usedPercent` and converts the
+reset instant to the configured Jakarta date.
 
-The documented Codex app-server method `account/rateLimits/read` can expose
-Codex quota percentages and windows on an authenticated Codex host, but that does
-not prove it is the desired metric. The integration remains disabled. Browser
-session scraping, cookie reuse, fabricated percentages, and undocumented auth
-flows are out of scope.
+The exporter runs inside the existing OpenVSCode container, starts no model
+turn, and writes only an allowlisted schema through stdout. An Unraid host script
+atomically publishes that output for a read-only daily-digest mount. Codex OAuth
+files remain inside OpenVSCode. Direct calls to the undocumented WHAM endpoint,
+browser session scraping, credential sharing, and a Docker socket in the digest
+container remain out of scope. The integration is disabled by default.
 
 ## Telegram
 
@@ -173,6 +176,6 @@ flows are out of scope.
 - No Docker socket.
 - No published application port is required.
 - State is writable only under the dedicated persistent data mount.
-- Backup logs, Vellum exports, and secrets are mounted read-only.
+- Backup logs, Vellum exports, Codex exports, and secrets are mounted read-only.
 - UID 99 can be shared by other Unraid services; narrow per-container mounts are
   required in addition to host file permissions.

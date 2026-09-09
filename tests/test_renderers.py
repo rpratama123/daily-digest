@@ -14,7 +14,7 @@ def test_fixture_digest_is_concise_and_correctly_labeled() -> None:
     assert "Expenses: Rp185.500 · 7 transactions" in message
     assert "Vellum: ~$1.42 / $18.20" in message
     assert "DeepSeek: ~USD 0.21 / USD 8.72" in message
-    assert "ChatGPT" not in message
+    assert "Codex weekly: 50% left · resets Tue, 15 Sep" in message
     assert "All systems normal" in message
 
 

@@ -48,12 +48,13 @@ host bind sources before validating Compose:
 /mnt/cache/appdata/daily-digest/secrets/
 /mnt/user/mediaserver/downloads/
 /mnt/user/webdav/daily-digest/vellum/  # only when Vellum is enabled
+/mnt/user/webdav/daily-digest/codex/   # required by the Compose bind
 ```
 
 Expected access:
 
 - state: read-write for UID/GID `99:100`;
-- configuration, secrets, Rclone logs, and Vellum exports: read-only;
+- configuration, secrets, Rclone logs, Vellum exports, and Codex exports: read-only;
 - secrets: narrowly mounted and unavailable to unrelated containers.
 
 Validate and build from the Unraid host without starting the service:
@@ -78,9 +79,9 @@ documented reconciliation command once implemented rather than editing SQLite.
 
 ## Integration status
 
-See `docs/integration-findings.md` and `docs/vellum-export.md`. Expenses, Vellum,
-ChatGPT/OpenCode quota, and ESC/POS are disabled by default. Missing collector
-data does not suppress healthy sections.
+See `docs/integration-findings.md`, `docs/vellum-export.md`, and
+`docs/codex-export.md`. Expenses, Vellum, Codex quota, and ESC/POS are disabled
+by default. Missing collector data does not suppress healthy sections.
 
 The expense collector connects to `expenses-dashboard:8000` on proxynet and
 sends the configured public-domain Host header required by the upstream. This

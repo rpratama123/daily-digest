@@ -11,6 +11,7 @@ import httpx
 
 from app.clock import DigestContext, utc_now
 from app.collectors.backups import collect_backups
+from app.collectors.codex import CodexCollector
 from app.collectors.deepseek import DeepSeekCollector
 from app.collectors.expenses import ExpenseCollector
 from app.collectors.home_assistant import HomeAssistantCollector
@@ -211,7 +212,14 @@ class DigestService:
             midnight_tolerance=timedelta(seconds=self.settings.snapshot_tolerance_seconds),
         )
         results.append(vellum.collect(context, observed_at))
-        results.append(_disabled("chatgpt", observed_at, context))
+        codex = CodexCollector(
+            self.settings.codex.export_file,
+            self.settings.timezone,
+            enabled=self.settings.codex.enabled,
+            max_file_bytes=self.settings.codex.max_file_bytes,
+            max_age=timedelta(minutes=self.settings.codex.max_age_minutes),
+        )
+        results.append(codex.collect(observed_at))
 
         report = DigestReport(
             delivery_date=delivery_date,
@@ -409,6 +417,15 @@ def fixture_report(delivery_date: date, timezone: str = "Asia/Jakarta") -> Diges
                 },
                 True,
             ),
-            _disabled("chatgpt", now, context),
+            result(
+                "codex",
+                {
+                    "remaining_percent": "50",
+                    "window_minutes": 10080,
+                    "resets_at": "2026-09-15T10:20:32+00:00",
+                    "reset_date": "2026-09-15",
+                    "label": "weekly",
+                },
+            ),
         ],
     )

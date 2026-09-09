@@ -41,6 +41,12 @@ services:
         read_only: true
         bind:
           create_host_path: false
+      - type: bind
+        source: /mnt/user/webdav/daily-digest/codex
+        target: /data/codex-exports
+        read_only: true
+        bind:
+          create_host_path: false
       - type: tmpfs
         target: /tmp
         tmpfs:

@@ -27,6 +27,7 @@ def settings(tmp_path: Path, **overrides) -> Settings:
         "openrouter": {"enabled": False},
         "deepseek": {"enabled": False},
         "vellum": {"enabled": False},
+        "codex": {"enabled": False},
         "telegram": {"enabled": False},
     }
     values.update(overrides)
@@ -55,6 +56,22 @@ def test_backup_failure_does_not_suppress_other_sections(tmp_path: Path) -> None
     report = service.collect(date(2026, 9, 9), datetime(2026, 9, 9, tzinfo=UTC))
     assert report.by_name("backups").status == Status.FAILED
     assert report.by_name("expenses").status == Status.DISABLED
+
+
+def test_enabled_codex_export_is_collected_without_credentials(tmp_path: Path) -> None:
+    export = tmp_path / "latest.json"
+    fixture = Path(__file__).parent / "fixtures" / "codex" / "latest.json"
+    export.write_bytes(fixture.read_bytes())
+    storage = Storage(tmp_path / "state.sqlite3")
+    storage.initialize()
+    service = DigestService(
+        settings(tmp_path, codex={"enabled": True, "export_file": export}), storage
+    )
+    report = service.collect(date(2026, 9, 9), datetime(2026, 9, 9, 10, 10, tzinfo=UTC))
+    codex = report.by_name("codex")
+    assert codex is not None
+    assert codex.status == Status.OK
+    assert codex.data["remaining_percent"] == "50"
 
 
 def test_cumulative_snapshot_pair_is_read_from_exact_boundaries(tmp_path: Path) -> None:

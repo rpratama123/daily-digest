@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+from datetime import date
 from decimal import Decimal, InvalidOperation
 from html import escape
 
@@ -76,6 +77,16 @@ def _provider_line(label: str, result: CollectorResult) -> str:
             return f"{label}: unavailable (balance adjustment)"
         return _unavailable(label)
     data = result.data
+    if result.name == "codex":
+        try:
+            reset_date = date.fromisoformat(str(data.get("reset_date")))
+        except ValueError:
+            return _unavailable(label)
+        remaining = _number(data.get("remaining_percent"))
+        if remaining == "unavailable":
+            return _unavailable(label)
+        reset = f"{WEEKDAYS[reset_date.weekday()]}, {reset_date.day} {MONTHS[reset_date.month - 1]}"
+        return f"{label} weekly: {remaining}% left · resets {reset}"
     if result.name == "openrouter":
         return f"{label}: ${_money(data.get('usage'))} / ${_money(data.get('balance'))}"
     if result.name == "deepseek":
@@ -141,7 +152,7 @@ def render_telegram(report: DigestReport) -> str:
         ("vellum", "Vellum"),
         ("openrouter", "OpenRouter"),
         ("deepseek", "DeepSeek"),
-        ("chatgpt", "ChatGPT"),
+        ("codex", "Codex"),
     )
     providers = [(report.by_name(name), label) for name, label in provider_names]
     visible = [
@@ -150,7 +161,7 @@ def render_telegram(report: DigestReport) -> str:
         if result and result.status != Status.DISABLED
     ]
     if visible:
-        lines.extend(["", "🤖 <b>AI yesterday / balance</b>"])
+        lines.extend(["", "🤖 <b>AI usage / balance</b>"])
         lines.extend(
             _provider_line(label, result) for result, label in visible if result is not None
         )

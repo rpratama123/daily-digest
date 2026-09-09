@@ -1,0 +1,1 @@
+{"bucket_id":"codex","captured_at":"2026-09-09T10:00:00Z","schema_version":1,"source":"codex_app_server_rate_limits","weekly":{"remaining_percent":"50","resets_at":"2026-09-15T10:20:32Z","used_percent":"50","window_minutes":10080}}

@@ -49,6 +49,12 @@ vellum:
   max_file_bytes: 131072
   max_age_hours: 36
 
+codex:
+  enabled: false
+  export_file: /data/codex-exports/latest.json
+  max_file_bytes: 32768
+  max_age_minutes: 30
+
 telegram:
   enabled: false
   bot_token_file: /run/secrets/daily-digest/telegram_bot_token

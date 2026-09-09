@@ -3,7 +3,7 @@ from pathlib import Path
 import pytest
 from pydantic import ValidationError
 
-from app.config import BackupSettings, Settings
+from app.config import BackupSettings, CodexSettings, Settings
 
 
 def test_disabled_integrations_do_not_require_secret_files(tmp_path: Path) -> None:
@@ -26,6 +26,13 @@ def test_backup_names_must_be_plain_filenames(name: str) -> None:
 def test_duplicate_backup_names_are_rejected() -> None:
     with pytest.raises(ValidationError):
         BackupSettings(logs=["same.log", "same.log"])
+
+
+def test_codex_defaults_to_a_fresh_fixed_export_file() -> None:
+    settings = CodexSettings()
+    assert settings.enabled is False
+    assert settings.export_file == Path("/data/codex-exports/latest.json")
+    assert settings.max_age_minutes == 30
 
 
 def test_yaml_loads_and_environment_overrides(monkeypatch, tmp_path: Path) -> None:
