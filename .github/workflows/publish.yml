@@ -20,10 +20,11 @@ jobs:
           enable-cache: true
       - name: Lint and format check
         run: |
-          uv run ruff check .
-          uv run ruff format --check .
+          uv sync --locked --extra dev
+          uv run --extra dev ruff check .
+          uv run --extra dev ruff format --check .
       - name: Test
-        run: uv run pytest -q
+        run: uv run --extra dev pytest -q
 
   publish-image:
     needs: test
